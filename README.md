@@ -48,9 +48,8 @@ ________________________________________
 /docker-compose.yml      --> Compose file to run backend, frontend, and DB
 ________________________________________
 🛠️ Features
-•	Authentication and Authorization (JWT)
 •	PostgreSQL Integration
-•	Leave and Employee Management
+•	Leave, Asset and Employee Management
 •	Dockerized Deployment
 ________________________________________
 📫 Contact
