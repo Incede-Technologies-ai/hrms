@@ -1,0 +1,147 @@
+.employee-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+}
+
+/* Fix table headers so they don't overlap rows */
+.employee-table th {
+    background-color: #055565;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 500;
+
+    position: sticky;
+    top: 0;  /* Ensures it stays at the top without blocking rows */
+    z-index: 10;  /* Keeps it above other content */
+}
+
+/* Ensure table rows don't overlap */
+.employee-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    background-color: white; /* Ensures the text remains readable */
+}
+
+/* Ensure last row does not have a border */
+.employee-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect */
+.employee-table tbody tr:hover {
+    background-color: rgba(5, 85, 101, 0.05);
+}
+
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-btn {
+    background-color: #055565;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #044450;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.search-container {
+    margin-bottom: 1rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    max-width: 300px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    padding: 0.5rem 1rem;
+}
+
+.search-icon {
+    color: #055565;
+    margin-right: 0.5rem;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0.25rem;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.page-btn {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #055565;
+    color: white;
+    border-color: #055565;
+}
+
+.page-btn.active {
+    background: #055565;
+    color: white;
+    border-color: #055565;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+.table-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+

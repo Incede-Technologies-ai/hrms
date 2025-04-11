@@ -1,0 +1,34 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  backend:
+    build: ./incede_hrms_backend
+    ports:
+      - "8080:8080"
+    networks:
+      - hr-net
+
+  frontend:
+    build: ./incede_hrms_frontend
+    ports:
+      - "3000:80"
+    networks:
+      - hr-net
+    depends_on:
+      - backend
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_DB: hrdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: incede
+    ports:
+      - "5432:5432"
+    networks:
+      - hr-net
+
+networks:
+  hr-net:

@@ -1,0 +1,231 @@
+.container {
+    width: 90%;
+    margin: auto;
+    font-family: Arial, sans-serif;
+}
+
+.toggle-section {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.toggle-section button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.toggle-section button.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background: #055565;
+    color: white;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Keep H3 inside sticky header */
+.sticky-header h3 {
+    padding-top: 20px;
+    margin: 0;
+    padding-bottom: 30px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.table-box table {
+    margin-top: -2px;
+    margin-bottom: 10px;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    position: sticky;
+    top: 70px; 
+    z-index: 5;
+    padding-top: 10px;
+}
+
+.tables-container {
+    display: flex;
+    gap: 20px;
+}
+
+.table-box {
+    flex: 1;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+thead th {
+    position: sticky;
+    background: grey;
+    top: 0;
+    z-index: 1;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.scrollable {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+
+
+.icon-button-return {
+    background: red;
+    border: none;
+    cursor: pointer;
+    font-size: 30px;  /* Icon size */   
+    width: 50px;   
+    height: 50px;
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    
+    border-radius: 5px; 
+}
+.remove {
+    color: red;
+}
+
+.submit-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Moves the button further down */
+}
+
+.textarea-large {
+    width: 99%;
+    height: 80px;
+    resize: none;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.textarea-large:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.calendar-toggle {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.calendar-toggle:hover {
+    background-color: #0056b3;
+}
+
+/* Toggle buttons container */
+.user-type-toggle {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    display: flex;
+    gap: 2px;
+    margin-top: 0px;
+    padding: 2px 1px;
+    font-size: 5px;
+}
+
+/* Toggle button styles */
+.user-type-toggle button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Highlight the active toggle */
+.user-type-toggle button.active {
+    background-color: #007BFF;
+    padding: 6px 10px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Search icon container */
+.search-icon-table-container {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+/* Search icon */
+.search-icon-table {
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    align-items: start;
+    transition: color 0.3s;
+}
+
+.search-icon-table:hover {
+    color: #007bff;
+}
+
+/* Hidden search input */
+.search-input-table {
+    display: none;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 11px;
+    width: 150px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Show search input when active */
+.search-input-table.active {
+    display: inline-block;
+}
