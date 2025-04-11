@@ -19,6 +19,8 @@ Open the following files and ensure the database username and password match:
 •	incede_hrms_backend/src/main/resources/application.properties:
 •	spring.datasource.username=your_username
 •	spring.datasource.password=your_password
+
+
 2. PostgreSQL Configuration (Docker Managed)
 The Docker Compose file will automatically set up PostgreSQL with the credentials you provide.
 •	Database Name: hrdb
@@ -28,7 +30,9 @@ Create database Manually
 1.	Install PostgreSQL on your machine: PostgreSQL Downloads.
 2.	Create Database:
 CREATE DATABASE hrdb;
-3. Run the Application
+
+
+4. Run the Application
 Navigate to the root directory of the project (where docker-compose.yml is located), then run:
 docker-compose up --build
 This will:
@@ -37,10 +41,7 @@ This will:
 •	Expose the frontend on http://localhost:3000
 ________________________________________
 📦 Useful Commands
-•	Start services:
-•	docker-compose up --build
-•	Stop all containers:
-•	docker-compose down
+•	Start services: docker-compose up --build
 ________________________________________
 🧱 Project Structure
 /incede_hrms_backend     --> Spring Boot backend
