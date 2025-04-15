@@ -154,7 +154,7 @@ textarea {
 
 /* Add Asset Button */
 .btn-add-asset {
-    background-color: #28a745;
+    background-color: #007BFF;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -166,7 +166,7 @@ textarea {
 }
 
 .btn-add-asset:hover {
-    background-color: #218838;
+    background-color: #0056b3;
 }
 
 /* Modal Overlay */
