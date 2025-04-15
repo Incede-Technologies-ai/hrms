@@ -106,7 +106,7 @@ const EmployeeList = forwardRef(({ onEditEmployee }, ref) => {
         <table style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: 'white' }} className="employee-table">
           <thead>
             <tr>
-              <th><i className="fas fa-id-badge"></i> employe ID</th>
+              <th><i className="fas fa-id-badge"></i> Employee ID</th>
               <th><i className="fas fa-user"></i> Full Name</th>
               <th><i className="fas fa-briefcase"></i> Designation</th>
               <th><i className="fas fa-building"></i> Department</th>
