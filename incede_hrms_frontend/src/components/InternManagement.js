@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./InternManagement.css";
+import CustomCalendar from "./CustomCalendar"; // Import the custom calendar component
 
 function InternManagement() {
   const [interns, setInterns] = useState([]);
@@ -15,7 +16,7 @@ function InternManagement() {
     department: "",
     status: "Paid", // Default to Paid
     joiningDate: "",
-    birthDate:"",
+    birthDate: "",
     email: "",
     contactNo: "",
   });
@@ -41,11 +42,18 @@ function InternManagement() {
     });
   };
 
+  const handleDateChange = (name, date) => {
+    setFormData({
+      ...formData,
+      [name]: date,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     console.log("Submitting Intern Data:", JSON.stringify(formData, null, 2)); // ✅ Log JSON to console
-  
+
     try {
       let response;
       if (selectedIntern) {
@@ -56,7 +64,7 @@ function InternManagement() {
       } else {
         response = await axios.post("http://localhost:8080/api/interns", formData);
       }
-  
+
       if (response.data) {
         fetchInterns();
         Swal.fire({
@@ -65,7 +73,7 @@ function InternManagement() {
           showConfirmButton: false,
           timer: 1500,
         });
-  
+
         // Reset form after submission
         setFormData({
           id: "",
@@ -74,11 +82,11 @@ function InternManagement() {
           department: "",
           status: "Paid",
           joiningDate: "",
-          birthDate:"",
+          birthDate: "",
           email: "",
           contactNo: "",
         });
-  
+
         setSelectedIntern(null);
       }
     } catch (error) {
@@ -86,22 +94,23 @@ function InternManagement() {
       Swal.fire("Error!", "Failed to save intern.", "error");
     }
   };
+
   const formatDate = (dateString) => {
-    if (!dateString) return '';
+    if (!dateString) return "";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB');
+    return date.toLocaleDateString("en-GB");
   };
 
   const handleEdit = (intern) => {
     setSelectedIntern(intern);
     setFormData({
-      id:intern.id,
+      id: intern.id,
       internId: intern.internId,
       fullName: intern.fullName,
       department: intern.department,
       status: intern.status,
       joiningDate: intern.joiningDate,
-      birthDate:intern.birthDate,
+      birthDate: intern.birthDate,
       email: intern.email,
       contactNo: intern.contactNo,
     });
@@ -143,74 +152,124 @@ function InternManagement() {
         <div className="form-section">
           <div className="form-card">
             <h2>{selectedIntern ? "Edit Intern" : "Register Intern"}</h2>
-            <form onSubmit={handleSubmit}>
-              <input type="text" name="internId" placeholder="Intern ID" value={formData.internId} onChange={handleChange} required />
-              <input type="text" name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange} required />
-              <input type="text" name="department" placeholder="Department" value={formData.department} onChange={handleChange} required />
-              
-              {/* Radio Buttons for Paid / Unpaid */}
-              {/* Radio Buttons for Paid / Unpaid */}
-              <div className="radio-group">
-                {/* <label className="radio-label">Intern Type:</label> */}
-
-                <label className="radio-option">
-                  <input 
-                    type="radio" 
-                    id="paid" 
-                    name="status" 
-                    value="Paid" 
-                    checked={formData.status === "Paid"} 
-                    onChange={handleChange} 
-                  />
-                  <span className="custom-radio"></span>
-                  Paid
-                </label>
-
-                <label className="radio-option">
-                  <input 
-                    type="radio" 
-                    id="unpaid" 
-                    name="status" 
-                    value="Unpaid" 
-                    checked={formData.status === "Unpaid"} 
-                    onChange={handleChange} 
-                  />
-                  <span className="custom-radio"></span>
-                  Unpaid
-                </label>
+            <form onSubmit={handleSubmit} className="intern-form">
+              <div className="form-row">
+                <label>Intern ID</label>
+                <input
+                  type="text"
+                  name="internId"
+                  value={formData.internId}
+                  onChange={handleChange}
+                  required
+                />
               </div>
-{/* 
-              <label style={FontFace}>Joining Date</label> <br></br>
-              <input type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required /> <br></br> */}
-              <label style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px", display: "block" }}>
-                Joining Date
-              </label>
-              <input type="date" name="joiningDate" value={formData.joiningDate} onChange={handleChange} required />
 
-              {/* <label>Birth Date</label> <br></br>
-              <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required /> */}
-              <label style={{ fontWeight: "bold", fontSize: "16px", marginBottom: "5px", display: "block" }}>
-                Birth Date
-              </label>
-              <input 
-                type="date" 
-                name="birthDate" 
-                value={formData.birthDate} 
-                onChange={handleChange} 
-                required 
-              />
+              <div className="form-row">
+                <label>Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
 
-              
-              
-              <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-              <input type="tel" name="contactNo" placeholder="Contact No" value={formData.contactNo} onChange={handleChange} required />
-              <button type="submit">{selectedIntern ? "Update Intern" : "Add Intern"}</button>
+              <div className="form-row">
+                <label>Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Status</label>
+                <div className="radio-group">
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      id="paid"
+                      name="status"
+                      value="Paid"
+                      checked={formData.status === "Paid"}
+                      onChange={handleChange}
+                    />
+                    <span className="custom-radio"></span>
+                    Paid
+                  </label>
+
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      id="unpaid"
+                      name="status"
+                      value="Unpaid"
+                      checked={formData.status === "Unpaid"}
+                      onChange={handleChange}
+                    />
+                    <span className="custom-radio"></span>
+                    Unpaid
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-row">
+                <label>Joining Date</label>
+                <CustomCalendar
+                  selectedDate={formData.joiningDate}
+                  onDateChange={(date) => handleDateChange("joiningDate", date)}
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Birth Date</label>
+                <CustomCalendar
+                  selectedDate={formData.birthDate}
+                  onDateChange={(date) => handleDateChange("birthDate", date)}
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-row">
+                <label>Contact No</label>
+                <input
+                  type="tel"
+                  name="contactNo"
+                  value={formData.contactNo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="submit-btn">
+                  {selectedIntern ? "Update Intern" : "Add Intern"}
+                </button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => setSelectedIntern(null)}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>
-
-
-        
 
         {/* Right Side - Intern List in a Card */}
         <div className="table-section">
@@ -221,8 +280,6 @@ function InternManagement() {
                 <tr>
                   <th>Intern ID</th>
                   <th>Full Name</th>
-                  {/* <th>Department</th> */}
-                  {/* <th>Status</th> */}
                   <th>Joining Date</th>
                   <th>Email</th>
                   <th>Contact No</th>
@@ -234,16 +291,24 @@ function InternManagement() {
                   <tr key={intern.id}>
                     <td>{intern.internId}</td>
                     <td>{intern.fullName}</td>
-                    {/* <td>{intern.department}</td> */}
-                    {/* <td>{intern.status}</td> */}
                     <td>{formatDate(intern.joiningDate)}</td>
                     <td>{intern.email}</td>
                     <td>{intern.contactNo}</td>
                     <td>
-                        <div className="action-buttons">
-                        <button className="edit-btn" onClick={() => handleEdit(intern)}><i className="fas fa-edit"></i></button>
-                        <button className="delete-btn" onClick={() => handleDelete(intern.id)}><i className="fas fa-trash-alt"></i></button>
-                        </div>
+                      <div className="action-buttons">
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEdit(intern)}
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDelete(intern.id)}
+                        >
+                          <i className="fas fa-trash-alt"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -252,11 +317,25 @@ function InternManagement() {
 
             {/* Pagination Controls */}
             <div className="pagination">
-              <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1} className="page-btn">Previous</button>
-              <span> Page {currentPage} of {totalPages} </span>
-              <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages} className="page-btn">Next</button>
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="page-btn"
+              >
+                Previous
+              </button>
+              <span>
+                {" "}
+                Page {currentPage} of {totalPages}{" "}
+              </span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="page-btn"
+              >
+                Next
+              </button>
             </div>
-
           </div>
         </div>
       </div>
