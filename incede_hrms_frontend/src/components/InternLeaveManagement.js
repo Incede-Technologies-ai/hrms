@@ -269,14 +269,14 @@ const InternLeaveManagement = () => {
                                 {/* Conditional Rendering */}
                                 {formData.noOfLeaves > 1 ? (
                                     <>
-                                        <div className="form-row">
+                                        <div className="form-row1">
                                             <label>Start Date</label>
                                             <CustomCalendar
                                                 value={formData.startDate}
                                                 onChange={(date) => handleDateChange("startDate", date)}
                                             />
                                         </div>
-                                        <div className="form-row">
+                                        <div className="form-row1">
                                             <label>End Date</label>
                                             <CustomCalendar
                                                 value={formData.endDate}
@@ -285,7 +285,7 @@ const InternLeaveManagement = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="form-row">
+                                    <div className="form-row1">
                                         <label>Leave Date</label>
                                         <CustomCalendar
                                             value={formData.leaveDate}

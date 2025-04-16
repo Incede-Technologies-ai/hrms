@@ -106,8 +106,8 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
   };
 
   const renderField = (label, name, type, placeholder = "") => (
-    <div className="form-group">
-      <label className="form-label">{label}</label>
+    <div className="form-group1">
+      <label className="form-label1">{label}</label>
       {type === "date" ? (
         <CustomCalendar
           value={formData[name]}
@@ -140,27 +140,27 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
           {isEdit ? "Edit Employee" : "Add Employee"}
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="form-row">
+          <div className="form-row1">
             {renderField("Employee ID", "employeeId", "text", "Enter employee ID")}
             {renderField("Full Name", "fullName", "text", "Enter full name")}
           </div>
 
-          <div className="form-row">
+          <div className="form-row1">
             {renderField("Designation", "designation", "text", "Enter designation")}
             {renderField("Department", "department", "text", "Enter department")}
           </div>
 
-          <div className="form-row">
+          <div className="form-row1">
             {renderField("Joining Date", "joiningDate", "date")} 
             {renderField("Date of Birth", "dateOfBirth", "date")} 
           </div>
 
-          <div className="form-row">
+          <div className="form-row1">
             {renderField("Official Email", "officialEmail", "email", "Enter official email")}
             {renderField("Personal Email", "personalEmail", "email", "Enter personal email")}
           </div>
 
-          <div className="form-row">
+          <div className="form-row1">
             {renderField("Contact No", "contactNo", "tel", "Enter contact number")}
             {renderField("Emergency Contact", "emergencyContact", "tel", "Enter emergency contact")}
           </div>

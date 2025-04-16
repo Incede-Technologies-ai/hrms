@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     networks:
       - hr-net
+    restart: always
+
 
   frontend:
     build: ./incede_hrms_frontend
@@ -17,6 +19,7 @@ services:
       - hr-net
     depends_on:
       - backend
+    restart: always
 
   postgres:
     image: postgres:16
@@ -24,11 +27,13 @@ services:
     environment:
       POSTGRES_DB: hrdb
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: incede
+      POSTGRES_PASSWORD: root
     ports:
       - "5432:5432"
     networks:
       - hr-net
+    restart: always
+
 
 networks:
   hr-net:
