@@ -1,0 +1,19 @@
+.custom-row{
+    flex: 2 1;
+    display: flex;
+    font-weight: bold;
+
+}
+
+.form-row label {
+    left: auto !important;
+    text-align: left !important;
+    font-weight: bold !important;
+    flex: 1 !important;
+    max-width: 120px !important;
+  }
+  
+  .form-row input {
+    max-width: 200px !important;
+    width: 100% !important;
+  }

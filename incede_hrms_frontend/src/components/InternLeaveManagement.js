@@ -272,15 +272,15 @@ const InternLeaveManagement = () => {
                                         <div className="form-row">
                                             <label>Start Date</label>
                                             <CustomCalendar
-                                                selectedDate={formData.startDate}
-                                                onDateChange={(date) => handleDateChange("startDate", date)}
+                                                value={formData.startDate}
+                                                onChange={(date) => handleDateChange("startDate", date)}
                                             />
                                         </div>
                                         <div className="form-row">
                                             <label>End Date</label>
                                             <CustomCalendar
-                                                selectedDate={formData.endDate}
-                                                onDateChange={(date) => handleDateChange("endDate", date)}
+                                                value={formData.endDate}
+                                                onChange={(date) => handleDateChange("endDate", date)}
                                             />
                                         </div>
                                     </>
@@ -288,8 +288,8 @@ const InternLeaveManagement = () => {
                                     <div className="form-row">
                                         <label>Leave Date</label>
                                         <CustomCalendar
-                                            selectedDate={formData.leaveDate}
-                                            onDateChange={(date) => handleDateChange("leaveDate", date)}
+                                            value={formData.leaveDate}
+                                            onChange={(date) => handleDateChange("leaveDate", date)}
                                         />
                                     </div>
                                 )}

@@ -85,10 +85,6 @@
     cursor: pointer;
 }
 
-.intern-management .form-section button:hover {
-    background: #45a049;
-}
-
 /* Right Side - Interns Table */
 .table-section {
     flex: 2;

@@ -1,17 +1,25 @@
 package com.hrapp.controller;
 
-import com.hrapp.model.Employee;
-import com.hrapp.service.EmployeeService;
-
-import io.swagger.v3.oas.annotations.Operation;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import com.hrapp.model.Employee;
+import com.hrapp.service.EmployeeService;
+
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -62,19 +70,15 @@ public class EmployeeController {
     @Operation(summary = "Create a new employee")
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {
         try {
-            System.out.println("Received employee data: " + employee);
-           
             employee.setSickLeaves(5.0);
             double availableLeaves = employeeService.calculateMonthsPassed(employee.getJoiningDate());
             employee.setLeaves(availableLeaves);
-            System.out.println(availableLeaves);
             Employee savedEmployee = employeeService.saveEmployee(employee);
             return ResponseEntity.ok(Map.of(
                 "message", "Employee added successfully",
                 "employee", savedEmployee
             ));
-        } catch (Exception e) {
-            System.err.println("Error saving employee: " + e.getMessage());
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
@@ -88,7 +92,7 @@ public class EmployeeController {
                 "message", "Employee updated successfully",
                 "employee", updatedEmployee
             ));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }

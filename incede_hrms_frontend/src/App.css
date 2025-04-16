@@ -205,14 +205,6 @@ tr:hover {
   background-color: #c0392b;
 }
 
-/* .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #3498db, #2c3e50);
-} */
-
 .login-box {
   background: white;
   padding: 2rem;
@@ -298,7 +290,7 @@ tr:hover {
 }
 
 .table-responsive thead {
-  position: unset; /* or relative */
+  position: unset; 
 }
 
 
@@ -347,44 +339,6 @@ button {
   color: white;
   width: 100px;
 }
-/* 
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-} */
 
 /* Modal Styling */
 .modal {
@@ -466,7 +420,7 @@ textarea {
 }
 
 .submit-btn {
-    background-color: #4caf50;
+    background-color: #007BFF;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -484,7 +438,7 @@ textarea {
 }
 
 .submit-btn:hover {
-    background-color: #45a049;
+    background-color: #0069d9;
 }
 
 .cancel-btn:hover {

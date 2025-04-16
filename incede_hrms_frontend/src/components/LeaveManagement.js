@@ -262,7 +262,7 @@ const LeaveManagement = () => {
                     <table style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: 'white' }} className="leave-table">
                         <thead>
                             <tr>
-                                <th><i className="fas fa-id-badge"></i> employe ID</th>
+                                <th><i className="fas fa-id-badge"></i> Employee ID</th>
                                 <th><i className="fas fa-user"></i> Employee Name</th>
                                 <th><i className="fas fa-calendar-check"></i> Normal Leave Balance</th>
                                 <th><i className="fas fa-calendar-plus"></i> Sick Leave Balance</th>

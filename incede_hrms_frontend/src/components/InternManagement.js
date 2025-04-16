@@ -220,16 +220,16 @@ function InternManagement() {
               <div className="form-row">
                 <label>Joining Date</label>
                 <CustomCalendar
-                  selectedDate={formData.joiningDate}
-                  onDateChange={(date) => handleDateChange("joiningDate", date)}
+                  value={formData.joiningDate}
+                  onChange={(date) => handleDateChange("joiningDate", date)} 
                 />
               </div>
 
               <div className="form-row">
                 <label>Birth Date</label>
                 <CustomCalendar
-                  selectedDate={formData.birthDate}
-                  onDateChange={(date) => handleDateChange("birthDate", date)}
+                  value={formData.birthDate}
+                  onChange={(date) => handleDateChange("birthDate", date)} 
                 />
               </div>
 
@@ -252,6 +252,8 @@ function InternManagement() {
                   value={formData.contactNo}
                   onChange={handleChange}
                   required
+                  pattern="^\d{10}$" // Regex for 10-digit numbers
+                  title="Contact number must be a 10-digit number" // Custom error message
                 />
               </div>
 

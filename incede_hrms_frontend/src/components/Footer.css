@@ -3,7 +3,7 @@
   /* padding: 2rem; */
   background-color: linear-gradient(135deg, #3498db, #2c3e50);;
   color: white;
-  position: fixed; /* Optional: Fix the footer at the bottom */
+  position: fixed;
   bottom: 0;
   width: 100%;
   height: 30px;

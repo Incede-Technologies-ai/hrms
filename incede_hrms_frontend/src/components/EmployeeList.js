@@ -113,6 +113,7 @@ const EmployeeList = forwardRef(({ onEditEmployee }, ref) => {
               <th><i className="fas fa-calendar-alt"></i> Joining Date</th>
               <th><i className="fas fa-envelope"></i> Email</th>
               <th><i className="fas fa-phone"></i> Contact</th>
+              <th><i className="fas fa-phone-alt"></i> Emergency Contact</th>
               <th><i className="fas fa-cogs"></i> Actions</th>
             </tr>
           </thead>
@@ -126,6 +127,7 @@ const EmployeeList = forwardRef(({ onEditEmployee }, ref) => {
                 <td>{formatDate(employee.joiningDate)}</td>
                 <td>{employee.officialEmail}</td>
                 <td>{employee.contactNo}</td>
+                <td>{employee.emergencyContact || "N/A"}</td>
                 <td>
                   <div className="action-buttons">
                     <button

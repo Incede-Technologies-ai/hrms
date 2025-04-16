@@ -9,7 +9,6 @@
     position: sticky;
 }
 
-/* Fix table headers so they don't overlap rows */
 .employee-table th {
     background-color: #055565;
     color: white;
@@ -18,23 +17,20 @@
     font-weight: 500;
 
     position: sticky;
-    top: 0;  /* Ensures it stays at the top without blocking rows */
-    z-index: 10;  /* Keeps it above other content */
+    top: 0;  
+    z-index: 10;  
 }
 
-/* Ensure table rows don't overlap */
 .employee-table td {
     padding: 12px;
     border-bottom: 1px solid #eee;
-    background-color: white; /* Ensures the text remains readable */
+    background-color: white; 
 }
 
-/* Ensure last row does not have a border */
 .employee-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Hover effect */
 .employee-table tbody tr:hover {
     background-color: rgba(5, 85, 101, 0.05);
 }

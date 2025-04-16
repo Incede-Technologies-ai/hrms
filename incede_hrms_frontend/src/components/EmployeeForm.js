@@ -15,6 +15,7 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
     dateOfBirth: "",
     contactNo: "",
     personalEmail: "",
+    emergencyContact: "", // Add emergency contact
   });
 
   useEffect(() => {
@@ -29,6 +30,7 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
         dateOfBirth: employee.dateOfBirth || "",
         contactNo: employee.contactNo || "",
         personalEmail: employee.personalEmail || "",
+        emergencyContact: employee.emergencyContact || "", // Populate emergency contact
       });
     }
   }, [employee, isEdit]);
@@ -78,6 +80,7 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
           dateOfBirth: "",
           contactNo: "",
           personalEmail: "",
+          emergencyContact: "", // Reset emergency contact
         });
 
         Swal.fire({
@@ -98,7 +101,7 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
       }
     } catch (error) {
       console.error("Error saving employee:", error);
-      Swal.fire("Error!", "Failed to save employee.", "error");
+      Swal.fire("Error!", error.response?.data?.error || "Failed to save employee.", "error");
     }
   };
 
@@ -116,9 +119,15 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
           name={name}
           value={formData[name]}
           onChange={handleChange}
-          required
+          required={name !== "emergencyContact"} // Emergency contact is optional
           className="form-control"
           placeholder={placeholder}
+          pattern={name === "contactNo" || name === "emergencyContact" ? "^[0-9]{10}$" : undefined} // Regex for 10-digit numbers
+          title={
+            name === "contactNo" || name === "emergencyContact"
+              ? "Must be a 10-digit number"
+              : undefined
+          } // Custom error message
         />
       )}
     </div>
@@ -153,7 +162,7 @@ function EmployeeForm({ employee, isEdit, onSuccess, onClose }) {
 
           <div className="form-row">
             {renderField("Contact No", "contactNo", "tel", "Enter contact number")}
-            {renderField("Alternate No", "alternateNo", "tel", "Enter alternate number")}
+            {renderField("Emergency Contact", "emergencyContact", "tel", "Enter emergency contact")}
           </div>
 
           <div className="form-actions">

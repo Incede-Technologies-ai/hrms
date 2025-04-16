@@ -1,14 +1,16 @@
 package com.hrapp.service;
 
-import com.hrapp.model.Employee;
-import com.hrapp.repository.EmployeeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.hrapp.model.Employee;
+import com.hrapp.repository.EmployeeRepository;
 
 @Service
 public class EmployeeService {
@@ -39,13 +41,17 @@ public class EmployeeService {
 
     @Transactional
     public Employee saveEmployee(Employee employee) {
-        // Save the employee
-        Employee savedEmployee = employeeRepository.save(employee);
-        
-        // Initialize leave balance for new employee
-        leaveManagementService.initializeLeaveBalance(savedEmployee);
-        
-        return savedEmployee;
+        try {
+            // Save the employee
+            Employee savedEmployee = employeeRepository.save(employee);
+            
+            // Initialize leave balance for new employee
+            leaveManagementService.initializeLeaveBalance(savedEmployee);
+            
+            return savedEmployee;
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Employee ID or Email already exists.");
+        }
     }
 
     public List<Employee> getAllEmployees() {
@@ -59,23 +65,28 @@ public class EmployeeService {
 
     @Transactional
     public Employee updateEmployee(Long id, Employee employee) {
-        Employee existingEmployee = getEmployeeById(id);
-        
-        existingEmployee.setEmployeeId(employee.getEmployeeId());
-        double availableLeaves = calculateMonthsPassed(employee.getJoiningDate());
-        System.out.println(availableLeaves+"credited leaves");
-        existingEmployee.setLeaves(availableLeaves);
-        existingEmployee.setFullName(employee.getFullName());
-        existingEmployee.setDesignation(employee.getDesignation());
-        existingEmployee.setDepartment(employee.getDepartment());
-        existingEmployee.setJoiningDate(employee.getJoiningDate());
-        existingEmployee.setDateOfBirth(employee.getDateOfBirth());
-        existingEmployee.setOfficialEmail(employee.getOfficialEmail());
-        existingEmployee.setPersonalEmail(employee.getPersonalEmail());
-        existingEmployee.setContactNo(employee.getContactNo());
-        Employee saved_emp = employeeRepository.save(existingEmployee);
-        leaveManagementService.initializeLeaveBalance(saved_emp);
-        return saved_emp;
+        try {
+            Employee existingEmployee = getEmployeeById(id);
+            
+            existingEmployee.setEmployeeId(employee.getEmployeeId());
+            double availableLeaves = calculateMonthsPassed(employee.getJoiningDate());
+            existingEmployee.setLeaves(availableLeaves);
+            existingEmployee.setFullName(employee.getFullName());
+            existingEmployee.setDesignation(employee.getDesignation());
+            existingEmployee.setDepartment(employee.getDepartment());
+            existingEmployee.setJoiningDate(employee.getJoiningDate());
+            existingEmployee.setDateOfBirth(employee.getDateOfBirth());
+            existingEmployee.setOfficialEmail(employee.getOfficialEmail());
+            existingEmployee.setPersonalEmail(employee.getPersonalEmail());
+            existingEmployee.setContactNo(employee.getContactNo());
+            existingEmployee.setEmergencyContact(employee.getEmergencyContact());
+            
+            Employee savedEmployee = employeeRepository.save(existingEmployee);
+            leaveManagementService.initializeLeaveBalance(savedEmployee);
+            return savedEmployee;
+        } catch (DataIntegrityViolationException e) {
+            throw new RuntimeException("Employee ID or Email already exists.");
+        }
     }
 
     public void deleteEmployee(Long id) {

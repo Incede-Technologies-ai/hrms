@@ -30,7 +30,9 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(name = "employee_id", unique = true, nullable = false)
     private String employeeId;
+    
     private String fullName;
     private String designation;
     private String department;
@@ -38,6 +40,7 @@ public class Employee {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate joiningDate;
     
+    @Column(name = "official_email", unique = true, nullable = false)
     private String officialEmail;
     
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -63,6 +66,9 @@ public class Employee {
     @Column(name = "lop_count", nullable = false)
     private Double lopCount = 0.0;
     
+    @Column(name = "emergency_contact", nullable = true)
+    private String emergencyContact; // New field for emergency contact
+
     private boolean active = true; // Default is active
 
 
