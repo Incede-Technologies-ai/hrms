@@ -404,7 +404,7 @@ const LeaveManagement = () => {
                                     {/* Conditional Rendering for Dates */}
                                     {formData.noOfLeaves > 1 ? (
                                         <>
-                                            <div className="form-row">
+                                            <div className="form-row1">
                                                 <label>Start Date</label>
                                                 <CustomCalendar
                                                     value={formData.startDate}
@@ -412,7 +412,7 @@ const LeaveManagement = () => {
                                                     required
                                                 />
                                             </div>
-                                            <div className="form-row">
+                                            <div className="form-row1">
                                                 <label>End Date</label>
                                                 <CustomCalendar
                                                     value={formData.endDate}
@@ -422,7 +422,7 @@ const LeaveManagement = () => {
                                             </div>
                                         </>
                                     ) : (
-                                        <div className="form-row">
+                                        <div className="form-row1">
                                             <label>Leave Date</label>
                                             <CustomCalendar
                                                 value={formData.leaveDate}

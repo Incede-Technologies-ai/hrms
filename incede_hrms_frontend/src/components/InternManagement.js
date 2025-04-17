@@ -186,7 +186,7 @@ function InternManagement() {
                 />
               </div>
 
-              <div className="form-row">
+              <div className="form-row-radio">
                 <label>Status</label>
                 <div className="radio-group">
                   <label className="radio-option">
@@ -217,7 +217,7 @@ function InternManagement() {
                 </div>
               </div>
 
-              <div className="form-row">
+              <div className="form-row2">
                 <label>Joining Date</label>
                 <CustomCalendar
                   value={formData.joiningDate}
@@ -225,7 +225,7 @@ function InternManagement() {
                 />
               </div>
 
-              <div className="form-row">
+              <div className="form-row2">
                 <label>Birth Date</label>
                 <CustomCalendar
                   value={formData.birthDate}

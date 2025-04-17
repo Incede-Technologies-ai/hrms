@@ -33,7 +33,7 @@
 }
 .radio-group {
     display: flex;
-    align-items: center;
+    align-items: left;
     gap: 20px;
     margin-top: 10px;
     margin-left: 50px;
@@ -47,7 +47,7 @@
 /* Hide the default radio input */
 .radio-option input {
     opacity: 0;
-    position: absolute;
+    position: relative;
     width: 0;
     height: 0;
 }
@@ -166,4 +166,44 @@
     display: flex;
 }
 
+.form-row2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 10px;
+  }
 
+.form-row2 label {
+    width: 110px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+  }
+
+  .form-row2 input,
+  .form-row2 select, 
+  .form-row2 textarea {
+    flex: 3 1;
+    padding: 3px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;   
+    margin-top: 10px;
+    margin-bottom: 10px; 
+    max-height: 20px;
+    flex-grow: 1;
+    min-width: 200px;
+} 
+
+.form-row-radio,
+.form-row-radio label{
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px; 
+    gap: 20px;
+
+}
