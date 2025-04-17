@@ -24,7 +24,8 @@ const Reports = () => {
     const [endDate, setEndDate] = useState("");
     const [hiredEmployeesData, setHiredEmployeesData] = useState([]);
     const [assetData, setAssetData] = useState([]);
-
+    const [internData, setInternData] = useState([]); // Added state for intern data
+    const [pastInternData, setPastInternData] = useState([]); // Added state for past intern data
 
     useEffect(() => {
         fetchData();
@@ -59,12 +60,22 @@ const Reports = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const [employeesRes, leavesRes] = await Promise.all([
-                axios.get('http://localhost:8080/api/employees'),
+            const [employeesRes, activeInternsRes, pastInternsRes] = await Promise.all([
+                axios.get('http://localhost:8080/api/employees'), // Fetch employees
+                axios.get('http://localhost:8080/api/interns/active?presence=0'), // Fetch active interns
+                axios.get('http://localhost:8080/api/interns/active?presence=1'), // Fetch past interns
             ]);
-            setEmployeeData(employeesRes.data);
+
+            setEmployeeData(employeesRes.data); // Set employee data
+            setInternData(activeInternsRes.data); // Set active intern data
+            setPastInternData(pastInternsRes.data); // Set past intern data
         } catch (error) {
             console.error('Error fetching report data:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error fetching data',
+                text: 'Failed to fetch employees or interns data.',
+            });
         }
         setLoading(false);
     };
@@ -173,6 +184,40 @@ const Reports = () => {
             console.error("Error fetching hired employees:", error);
         }
         setLoading(false);
+    };
+
+    const fetchAnnualLeaveReport = async (employeeId, year) => {
+        if (!employeeId || !year) {
+            Swal.fire({
+                icon: "error",
+                title: "Please enter both Employee ID and Year",
+            });
+            return;
+        }
+    
+        try {
+            const response = await axios.get(`http://localhost:8080/api/leave/annual-leave-report`, {
+                params: { employeeId, year },
+            });
+    
+            const reportData = response.data;
+    
+            // Process the data to include Employee ID, Name, and leave types
+            const processedData = [
+                {
+                    employeeId: employeeId,
+                    name: "John Doe", // Replace with actual employee name if available in the response
+                    annual: reportData.ANNUAL || 0,
+                    sick: reportData.SICK || 0,
+                    lop: reportData.LOP || 0,
+                },
+            ];
+    
+            setLeaveReportData(processedData);
+        } catch (error) {
+            console.error("Error fetching annual leave report:", error);
+            Swal.fire("Error", error.response?.data?.error || "Failed to fetch the report", "error");
+        }
     };
 
     // Common filter function
@@ -744,7 +789,227 @@ const Reports = () => {
                     )}
                 </div>
             )
-        }
+        },
+        {
+            id: "annual-leave-report",
+            title: "Employee Annual Leave Report",
+            icon: "fas fa-calendar-alt",
+            description: "Summarized annual leave report for an employee",
+            component: () => (
+                <div className="report-content">
+                    <div className="search-container">
+                        <input
+                            className="form-control"
+                            type="text"
+                            placeholder="Enter Employee ID..."
+                            value={employeeId}
+                            onChange={(e) => setEmployeeId(e.target.value)}
+                        />
+                        <input
+                            className="form-control"
+                            type="number"
+                            placeholder="Enter Year..."
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
+                        <button className="btn" onClick={() => fetchAnnualLeaveReport(employeeId, startDate)}>
+                            Get Report
+                        </button>
+                        <button
+                            className="btn btn-success"
+                            onClick={() =>
+                                downloadExcel(
+                                    "Annual_Leave_Report",
+                                    leaveReportData.map((data) => ({
+                                        EmployeeID: data.employeeId,
+                                        Name: data.name,
+                                        Annual: data.annual || 0,
+                                        Sick: data.sick || 0,
+                                        LOP: data.lop || 0,
+                                    })),
+                                    ["Employee ID", "Name", "Annual", "Sick", "LOP"]
+                                )
+                            }
+                        >
+                            Download Excel
+                        </button>
+                    </div>
+
+                    {leaveReportData.length > 0 ? (
+                        <table className="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Annual</th>
+                                    <th>Sick</th>
+                                    <th>LOP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {leaveReportData.map((data, index) => (
+                                    <tr key={index}>
+                                        <td>{data.employeeId}</td>
+                                        <td>{data.name}</td>
+                                        <td>{data.annual || 0}</td>
+                                        <td>{data.sick || 0}</td>
+                                        <td>{data.lop || 0}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className="no-data">No data available</div>
+                    )}
+                </div>
+            ),
+        },
+        {
+            id: "intern-directory",
+            title: "Intern Directory",
+            icon: "fas fa-users",
+            description: "A comprehensive list of all active interns with details like name, department, contact information, etc.",
+            component: () => (
+                <div className="report-content">
+                    <div className="search-container">
+                        <input
+                            className="form-control"
+                            type="text"
+                            placeholder="Search by Intern ID or Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button
+                            className="btn btn-success"
+                            onClick={() =>
+                                downloadExcel(
+                                    "Intern_Directory",
+                                    filterData(internData, searchTerm, ["internId", "fullName"]).map((intern) => [
+                                        intern.internId,
+                                        intern.fullName,
+                                        intern.department,
+                                        formatDate(intern.joiningDate),
+                                        formatDate(intern.birthDate),
+                                        intern.email,
+                                        intern.contactNo,
+                                        intern.status,
+                                    ]),
+                                    ["Intern ID", "Name", "Department", "Joining Date", "Birth Date", "Email", "Contact No", "Status"]
+                                )
+                            }
+                        >
+                            Download Excel
+                        </button>
+                    </div>
+
+                    {filterData(internData, searchTerm, ["internId", "fullName"]).length > 0 ? (
+                        <table className="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Intern ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Joining Date</th>
+                                    <th>Birth Date</th>
+                                    <th>Email</th>
+                                    <th>Contact No</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filterData(internData, searchTerm, ["internId", "fullName"]).map((intern, index) => (
+                                    <tr key={index}>
+                                        <td>{intern.internId}</td>
+                                        <td>{intern.fullName}</td>
+                                        <td>{intern.department}</td>
+                                        <td>{formatDate(intern.joiningDate)}</td>
+                                        <td>{formatDate(intern.birthDate)}</td>
+                                        <td>{intern.email}</td>
+                                        <td>{intern.contactNo}</td>
+                                        <td>{intern.status}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className="no-data">No data available</div>
+                    )}
+                </div>
+            ),
+        },
+        {
+            id: "past-intern-report",
+            title: "Past Intern Report",
+            icon: "fas fa-user-slash",
+            description: "A list of all past interns who are no longer active.",
+            component: () => (
+                <div className="report-content">
+                    <div className="search-container">
+                        <input
+                            className="form-control"
+                            type="text"
+                            placeholder="Search by Intern ID or Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button
+                            className="btn btn-success"
+                            onClick={() =>
+                                downloadExcel(
+                                    "Past_Intern_Report",
+                                    filterData(pastInternData, searchTerm, ["internId", "fullName"]).map((intern) => [
+                                        intern.internId,
+                                        intern.fullName,
+                                        intern.department,
+                                        formatDate(intern.joiningDate),
+                                        formatDate(intern.birthDate),
+                                        intern.email,
+                                        intern.contactNo,
+                                        intern.status,
+                                    ]),
+                                    ["Intern ID", "Name", "Department", "Joining Date", "Birth Date", "Email", "Contact No", "Status"]
+                                )
+                            }
+                        >
+                            Download Excel
+                        </button>
+                    </div>
+
+                    {filterData(pastInternData, searchTerm, ["internId", "fullName"]).length > 0 ? (
+                        <table className="report-table">
+                            <thead>
+                                <tr>
+                                    <th>Intern ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Joining Date</th>
+                                    <th>Birth Date</th>
+                                    <th>Email</th>
+                                    <th>Contact No</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filterData(pastInternData, searchTerm, ["internId", "fullName"]).map((intern, index) => (
+                                    <tr key={index}>
+                                        <td>{intern.internId}</td>
+                                        <td>{intern.fullName}</td>
+                                        <td>{intern.department}</td>
+                                        <td>{formatDate(intern.joiningDate)}</td>
+                                        <td>{formatDate(intern.birthDate)}</td>
+                                        <td>{intern.email}</td>
+                                        <td>{intern.contactNo}</td>
+                                        <td>{intern.status}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className="no-data">No data available</div>
+                    )}
+                </div>
+            ),
+        },
     ];
 
     return (

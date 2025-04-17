@@ -1,15 +1,14 @@
 package com.hrapp.service;
 
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hrapp.model.Interns;
 import com.hrapp.repository.InternRepository;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.LongSupplier;
 
 @Service
 public class InternService {
@@ -75,5 +74,12 @@ public class InternService {
             }
             internRepository.save(intern);
         });
+    }
+
+    public List<Interns> getInternsByPresence(Integer presence) {
+        if (presence != null) {
+            return internRepository.findByPresence(presence);
+        }
+        return internRepository.findAll();
     }
 }

@@ -32,10 +32,10 @@ const InternLeaveManagement = () => {
     // Fetch interns and their leave balance
     const fetchInterns = async () => {
         try {
-            const internsResponse = await axios.get("http://localhost:8080/api/interns");
+            const internsResponse = await axios.get("http://localhost:8080/api/interns?presence=0"); // Fetch only active interns
             const interns = internsResponse.data;
 
-            setInterns(interns);
+            setInterns(interns); // Set only active interns
         } catch (error) {
             console.error("Error fetching interns:", error);
             Swal.fire("Error", "Failed to fetch intern records", "error");
@@ -119,8 +119,9 @@ const InternLeaveManagement = () => {
     // Pagination
     const filteredInterns = interns.filter(
         (intern) =>
-            (intern.internId && intern.internId.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (intern.fullName && intern.fullName.toLowerCase().includes(searchTerm.toLowerCase()))
+            intern.presence === 0 && // Ensure only active interns are included
+            ((intern.internId && intern.internId.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                (intern.fullName && intern.fullName.toLowerCase().includes(searchTerm.toLowerCase())))
     );
 
     const indexOfLastRow = currentPage * rowsPerPage;
@@ -135,15 +136,19 @@ const InternLeaveManagement = () => {
             <div className="intern-leave-management">
                 <h2><i className="fas fa-calendar-alt"></i> Intern Leave Management</h2>
 
-                <div className="top-controls">
-                    <input
-                        type="text"
-                        placeholder="Search by Intern ID or Name..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="search-input"
-                    />
+                <div className="search-container">
+                    <div className="search-box">
+                        <i className="fas fa-search search-icon"></i>
+                        <input
+                            type="text"
+                            placeholder="Search by Intern ID or Name..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                    </div>
                 </div>
+
 
                 <div className="table-responsive">
                     <table className="leave-table">
@@ -231,8 +236,6 @@ const InternLeaveManagement = () => {
                                         value={formData.leaveType}
                                         onChange={(e) => setFormData({ ...formData, leaveType: e.target.value })}
                                     >
-                                        <option value="Annual">Annual Leave</option>
-                                        <option value="Sick">Sick Leave</option>
                                         <option value="LOP">Loss of Pay (LOP)</option>
                                     </select>
                                 </div>

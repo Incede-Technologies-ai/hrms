@@ -1,14 +1,15 @@
 package com.hrapp.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hrapp.model.Employee;
 import com.hrapp.model.LeaveTransaction;
 import com.hrapp.repository.EmployeeRepository;
 import com.hrapp.repository.LeaveTransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -54,10 +55,10 @@ public class ReportService {
         private String leaveDate;
         private String startdate;
         private String endDate;
-        private int numberOfDays;
+        private double numberOfDays;
         private boolean isHalfDay; // Add numberOfDays field
 
-        public EmployeeLeaveReport(String employeeId, String fullName, String department, String leaveType, String reason, String leaveDate, String startdate, String endDate, int numberOfDays, boolean isHalfDay) {
+        public EmployeeLeaveReport(String employeeId, String fullName, String department, String leaveType, String reason, String leaveDate, String startdate, String endDate, double numberOfDays, boolean isHalfDay) {
             this.employeeId = employeeId;
             this.fullName = fullName;
             this.department = department;
@@ -127,7 +128,7 @@ public class ReportService {
             return endDate;
         }
 
-        public int getNumberOfDays() {
+        public double getNumberOfDays() {
             return numberOfDays;
         }
 

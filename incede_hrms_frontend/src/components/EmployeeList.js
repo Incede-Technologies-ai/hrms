@@ -112,7 +112,7 @@ const EmployeeList = forwardRef(({ onEditEmployee }, ref) => {
               <th><i className="fas fa-building"></i> Department</th>
               <th><i className="fas fa-calendar-alt"></i> Joining Date</th>
               <th><i className="fas fa-envelope"></i> Email</th>
-              <th><i className="fas fa-phone"></i> Contact</th>
+              <th><i className="fas fa-phone-alt"></i> Contact</th>
               <th><i className="fas fa-phone-alt"></i> Emergency Contact</th>
               <th><i className="fas fa-cogs"></i> Actions</th>
             </tr>

@@ -142,8 +142,9 @@ function InternManagement() {
   // ** Pagination Logic **
   const indexOfLastIntern = currentPage * internsPerPage;
   const indexOfFirstIntern = indexOfLastIntern - internsPerPage;
-  const currentInterns = interns.slice(indexOfFirstIntern, indexOfLastIntern);
-  const totalPages = Math.ceil(interns.length / internsPerPage);
+  const filteredInterns = interns.filter((intern) => intern.presence === 0); // Filter active interns
+  const currentInterns = filteredInterns.slice(indexOfFirstIntern, indexOfLastIntern);
+  const totalPages = Math.ceil(filteredInterns.length / internsPerPage);
 
   return (
     <div className="intern-management">
