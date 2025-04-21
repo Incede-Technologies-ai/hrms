@@ -1,10 +1,21 @@
 package com.hrapp.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -43,10 +54,10 @@ public class LeaveTransaction {
     private LocalDate endDate;
 
     @Column(nullable = false)
-    private Integer lopCount = 0;
+    private Double lopCount = 0.0;
 
     @Column(name = "number_of_days", nullable = false)
-    private int numberOfDays;
+    private double numberOfDays;
 
     @Transient
     private Boolean isLop; // Derived field, not stored in the database

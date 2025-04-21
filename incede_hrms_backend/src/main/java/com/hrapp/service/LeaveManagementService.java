@@ -1,20 +1,21 @@
 package com.hrapp.service;
 
-import com.hrapp.model.Employee;
-import com.hrapp.model.LeaveTransaction;
-import com.hrapp.model.LeaveType;
-import com.hrapp.model.LeaveOperationsLog;
-import com.hrapp.repository.EmployeeRepository;
-import com.hrapp.repository.LeaveTransactionRepository;
-import com.hrapp.repository.LeaveOperationsLogRepository;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import com.hrapp.model.Employee;
+import com.hrapp.model.LeaveOperationsLog;
+import com.hrapp.model.LeaveTransaction;
+import com.hrapp.model.LeaveType;
+import com.hrapp.repository.EmployeeRepository;
+import com.hrapp.repository.LeaveOperationsLogRepository;
+import com.hrapp.repository.LeaveTransactionRepository;
 
 @Service
 public class LeaveManagementService {
@@ -63,8 +64,8 @@ public class LeaveManagementService {
 
     @Transactional
     public LeaveTransaction markLeave(String employeeId, LeaveType leaveType, LocalDate leaveDate,
-                                      LocalDate startDate, LocalDate endDate, int noOfLeaves, boolean isHalfDay,
-                                      String reason, int lopCount) {
+                                      LocalDate startDate, LocalDate endDate, double noOfLeaves, boolean isHalfDay,
+                                      String reason, double lopCount) {
         Employee employee = employeeRepository.findByEmployeeId(employeeId);
         if (employee == null) {
             throw new RuntimeException("Employee not found");
@@ -88,8 +89,24 @@ public class LeaveManagementService {
         leaveTransaction.setReason(reason);
         leaveTransaction.setAppliedDate(LocalDate.now());
         leaveTransaction.setIsHalfDay(isHalfDay);
-        leaveTransaction.setLopCount(lopCount);
-        leaveTransaction.setNumberOfDays(noOfLeaves); // Add numberOfDays to the transaction
+
+        // Set lopCount based on whether it's a half-day or full-day LOP
+        if (leaveType == LeaveType.LOP) {
+            if (isHalfDay) {
+                leaveTransaction.setLopCount(0.5);
+            } else {
+                leaveTransaction.setLopCount(noOfLeaves);
+            }
+        } else {
+            leaveTransaction.setLopCount(0.0); // No LOP for non-LOP leave types
+        }
+
+        // Set numberOfDays based on whether it's a half-day or full-day leave
+        if (isHalfDay) {
+            leaveTransaction.setNumberOfDays(0.5);
+        } else {
+            leaveTransaction.setNumberOfDays(noOfLeaves);
+        }
 
         if (leaveDate != null) {
             leaveTransaction.setLeaveDate(leaveDate);
@@ -123,7 +140,7 @@ public class LeaveManagementService {
         );
     }
 
-    private void updateLeaveBalance(Employee employee, LeaveType leaveType, int noOfLeaves, boolean isHalfDay, int lopCount) {
+    private void updateLeaveBalance(Employee employee, LeaveType leaveType, double noOfLeaves, boolean isHalfDay, double lopCount) {
         if (leaveType == LeaveType.SICK) {
             System.out.println("Sick leave processing");
             if (isHalfDay) {
@@ -215,5 +232,57 @@ public class LeaveManagementService {
         leaveOperationsLogRepository.save(log);
 
         return "Sick leaves reset successfully.";
+    }
+
+    @Transactional
+    public String resetLopCount() {
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+
+        // Check if LOP reset has already been performed for this year
+        boolean alreadyReset = leaveOperationsLogRepository.existsByOperationTypeAndOperationDateBetween(
+            "LOP_RESET",
+            LocalDate.of(currentYear, 1, 1),
+            LocalDate.of(currentYear, 12, 31)
+        );
+
+        if (alreadyReset) {
+            return "LOP count has already been reset for this year.";
+        }
+
+        // Reset LOP count for all employees
+        List<Employee> employees = employeeRepository.findAll();
+        for (Employee employee : employees) {
+            employee.setLopCount(0.0); // Reset LOP count to 0
+            employeeRepository.save(employee);
+        }
+
+        // Log the operation
+        LeaveOperationsLog log = new LeaveOperationsLog();
+        log.setOperationType("LOP_RESET");
+        log.setOperationDate(currentDate);
+        leaveOperationsLogRepository.save(log);
+
+        return "LOP count reset successfully.";
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Double> getAnnualLeaveReport(String employeeId, int year) {
+        Employee employee = employeeRepository.findByEmployeeId(employeeId);
+        if (employee == null) {
+            throw new RuntimeException("Employee not found");
+        }
+
+        // Fetch all leave transactions for the employee in the given year
+        List<LeaveTransaction> leaveTransactions = leaveTransactionRepository.findByEmployeeAndYear(employeeId, year);
+
+        // Summarize the number of days for each leave type
+        Map<String, Double> leaveSummary = leaveTransactions.stream()
+                .collect(Collectors.groupingBy(
+                        transaction -> transaction.getLeaveType().toString(),
+                        Collectors.summingDouble(LeaveTransaction::getNumberOfDays)
+                ));
+
+        return leaveSummary;
     }
 }

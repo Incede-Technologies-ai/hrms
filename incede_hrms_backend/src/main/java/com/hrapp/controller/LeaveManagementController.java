@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hrapp.model.LeaveTransaction;
@@ -48,7 +49,7 @@ public class LeaveManagementController {
         try {
             String employeeId = (String) request.get("employeeId");
             String leaveTypeStr = request.get("leaveType").toString().toUpperCase();
-            int no_of_leaves = (int) request.get("noOfLeaves");
+            double noOfLeaves = Double.parseDouble(request.get("noOfLeaves").toString());
             LeaveType leaveType;
             try {
                 leaveType = LeaveType.valueOf(leaveTypeStr);
@@ -63,11 +64,11 @@ public class LeaveManagementController {
             LocalDate startDate = request.get("startDate") != null ? LocalDate.parse(request.get("startDate").toString()) : null;
             LocalDate endDate = request.get("endDate") != null ? LocalDate.parse(request.get("endDate").toString()) : null;
 
-            int lopCount = leaveType == LeaveType.LOP && request.get("noOfLeaves") != null ?
-                    Integer.parseInt(request.get("noOfLeaves").toString()) : 0;
+            double lopCount = leaveType == LeaveType.LOP && request.get("noOfLeaves") != null ?
+                    Double.parseDouble(request.get("noOfLeaves").toString()) : 0.0;
 
             LeaveTransaction transaction = leaveManagementService.markLeave(
-                    employeeId, leaveType, leaveDate, startDate, endDate, no_of_leaves, isHalfDay, reason, lopCount
+                    employeeId, leaveType, leaveDate, startDate, endDate, noOfLeaves, isHalfDay, reason, lopCount
             );
 
             return ResponseEntity.ok(Map.of(
@@ -98,6 +99,30 @@ public class LeaveManagementController {
             return ResponseEntity.ok(message);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/reset-lop")
+    @Operation(summary = "Reset LOP count for all employees")
+    public ResponseEntity<?> resetLopCount() {
+        try {
+            String message = leaveManagementService.resetLopCount();
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/annual-leave-report")
+    @Operation(summary = "Get annual leave report for an employee")
+    public ResponseEntity<?> getAnnualLeaveReport(
+            @RequestParam String employeeId,
+            @RequestParam int year) {
+        try {
+            Map<String, Double> leaveReport = leaveManagementService.getAnnualLeaveReport(employeeId, year);
+            return ResponseEntity.ok(leaveReport);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 }

@@ -4,15 +4,14 @@ import Swal from 'sweetalert2';
 import './LeaveManagement.css';
 import CustomCalendar from './CustomCalendar'; // Import CustomCalendar
 
-
 const LeaveManagement = () => {
     const [leaves, setLeaves] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedLeave, setSelectedLeave] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [showAdvancedSettings, setShowAdvancedSettings] = useState(false); // State to toggle Advanced Settings
     const rowsPerPage = 6;
-
 
     const [formData, setFormData] = useState({
         employeeId: '',
@@ -26,7 +25,6 @@ const LeaveManagement = () => {
         isLop: false,
         noOfLeaves: 1
     });
-
 
     useEffect(() => {
         fetchLeaves();
@@ -175,8 +173,8 @@ const LeaveManagement = () => {
             text: 'Are you sure you want to credit annual leave for this month?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d32f2f',
+            cancelButtonColor: '#055565',
             confirmButtonText: 'Yes, credit it!'
         });
 
@@ -187,6 +185,7 @@ const LeaveManagement = () => {
                     Swal.fire('Warning', response.data, 'warning');
                 } else {
                     Swal.fire('Success', response.data, 'success');
+                    fetchLeaves();
                 }
             } catch (error) {
                 Swal.fire('Error', error.response?.data || 'Failed to credit annual leaves', 'error');
@@ -200,8 +199,8 @@ const LeaveManagement = () => {
             text: 'Are you sure you want to reset sick leaves for this year?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d32f2f',
+            cancelButtonColor: '#055565',
             confirmButtonText: 'Yes, reset it!'
         });
 
@@ -212,11 +211,42 @@ const LeaveManagement = () => {
                     Swal.fire('Warning', response.data, 'warning');
                 } else {
                     Swal.fire('Success', response.data, 'success');
+                    fetchLeaves();
                 }
             } catch (error) {
                 Swal.fire('Error', error.response?.data || 'Failed to reset sick leaves', 'error');
             }
         }
+    };
+
+    const handleResetLopCount = async () => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to reset LOP count for this year?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d32f2f',
+            cancelButtonColor: '#055565',
+            confirmButtonText: 'Yes, reset it!'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const response = await axios.post('http://localhost:8080/api/leave/reset-lop');
+                if (response.data.includes('LOP count has already been reset for this year.')) {
+                    Swal.fire('Warning', response.data, 'warning');
+                } else {
+                    Swal.fire('Success', response.data, 'success');
+                    fetchLeaves();
+                }
+            } catch (error) {
+                Swal.fire('Error', error.response?.data || 'Failed to reset LOP count', 'error');
+            }
+        }
+    };
+
+    const toggleAdvancedSettings = () => {
+        setShowAdvancedSettings(!showAdvancedSettings);
     };
 
     const filteredLeaves = leaves.filter(leave =>
@@ -249,14 +279,28 @@ const LeaveManagement = () => {
                         </div>
                     </div>
                     <div className="action-buttons-right">
-                        <button onClick={handleCreditAnnualLeaves} className="action-btn">
-                            Credit Annual Leaves
-                        </button>
-                        <button onClick={handleResetSickLeaves} className="action-btn">
-                            Reset Sick Leaves
+                        <button onClick={toggleAdvancedSettings} className="action-btn">
+                            Advanced Settings
                         </button>
                     </div>
                 </div>
+
+                {showAdvancedSettings && (
+                    <div className="advanced-settings">
+                        <h3>Advanced Settings</h3>
+                        <div className="advanced-buttons">
+                            <button onClick={handleCreditAnnualLeaves} className="advanced-btn">
+                                Credit Annual Leaves
+                            </button>
+                            <button onClick={handleResetSickLeaves} className="advanced-btn">
+                                Reset Sick Leaves
+                            </button>
+                            <button onClick={handleResetLopCount} className="advanced-btn">
+                                Reset LOP Count
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="table-responsive">
                     <table style={{ borderRadius: '15px', overflow: 'hidden', backgroundColor: 'white' }} className="leave-table">

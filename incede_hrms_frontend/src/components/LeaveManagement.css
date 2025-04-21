@@ -135,6 +135,7 @@
 .action-buttons-right{
     display: flex;
     justify-content: flex-end;
+    color: #044450;
 }
 
 .action-btn {
@@ -351,3 +352,40 @@
     margin-bottom: 5px; 
     max-height: 20px;
 } 
+
+.advanced-settings {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    align-items: center;
+}
+
+.advanced-settings h3 {
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #333;
+}
+
+.advanced-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.advanced-btn {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.advanced-btn:hover {
+    background-color: #b71c1c;
+}

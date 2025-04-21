@@ -69,6 +69,7 @@
 .input-container {
     position: relative; /* Ensure the button is positioned relative to this container */
     width: 100%;
+    align-items: center;
 }
 
 .form-control {
