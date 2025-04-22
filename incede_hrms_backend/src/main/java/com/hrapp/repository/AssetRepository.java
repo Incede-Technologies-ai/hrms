@@ -1,6 +1,8 @@
 package com.hrapp.repository;
 
 import com.hrapp.model.Asset;
+import com.hrapp.model.AssetAssignment;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,4 +14,5 @@ public interface AssetRepository extends JpaRepository<Asset, Long> {
     
     @Query("SELECT a FROM Asset a WHERE a.status = 1")
     List<Asset> findAllAvailableAssets();
+
 }

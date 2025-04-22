@@ -65,13 +65,6 @@ public class InternController {
         return ResponseEntity.ok("Intern deleted successfully");
     }
 
-    @PostMapping("/{internId}/attendance")
-    @Operation(summary = "Mark attendance for an intern")
-    public ResponseEntity<String> markAttendance(@PathVariable String internId, @RequestParam boolean isPresent) {
-        internService.markAttendance(internId, isPresent);
-        return ResponseEntity.ok("Attendance updated successfully");
-    }
-
     @GetMapping("/active")
     @Operation(summary = "Get interns by presence")
     public ResponseEntity<List<Interns>> getInterns(@RequestParam(required = false) Integer presence) {

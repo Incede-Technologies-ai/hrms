@@ -112,17 +112,4 @@ public class LeaveManagementController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-
-    @GetMapping("/annual-leave-report")
-    @Operation(summary = "Get annual leave report for an employee")
-    public ResponseEntity<?> getAnnualLeaveReport(
-            @RequestParam String employeeId,
-            @RequestParam int year) {
-        try {
-            Map<String, Double> leaveReport = leaveManagementService.getAnnualLeaveReport(employeeId, year);
-            return ResponseEntity.ok(leaveReport);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-    }
 }

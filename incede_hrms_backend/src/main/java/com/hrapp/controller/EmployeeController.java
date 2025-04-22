@@ -53,19 +53,6 @@ public class EmployeeController {
         }
     }
 
-    @GetMapping("/hired")
-    @Operation(summary = "Get employees hired between two dates")
-    public ResponseEntity<List<Employee>> getHiredEmployees(
-            @RequestParam(required = false) String startDate,
-            @RequestParam(required = false) String endDate) {
-        try {
-            List<Employee> employees = employeeService.getHiredEmployees(startDate, endDate);
-            return ResponseEntity.ok(employees);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
-
     @PostMapping
     @Operation(summary = "Create a new employee")
     public ResponseEntity<?> createEmployee(@RequestBody Employee employee) {

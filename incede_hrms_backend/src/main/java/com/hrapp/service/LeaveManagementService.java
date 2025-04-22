@@ -265,24 +265,4 @@ public class LeaveManagementService {
 
         return "LOP count reset successfully.";
     }
-
-    @Transactional(readOnly = true)
-    public Map<String, Double> getAnnualLeaveReport(String employeeId, int year) {
-        Employee employee = employeeRepository.findByEmployeeId(employeeId);
-        if (employee == null) {
-            throw new RuntimeException("Employee not found");
-        }
-
-        // Fetch all leave transactions for the employee in the given year
-        List<LeaveTransaction> leaveTransactions = leaveTransactionRepository.findByEmployeeAndYear(employeeId, year);
-
-        // Summarize the number of days for each leave type
-        Map<String, Double> leaveSummary = leaveTransactions.stream()
-                .collect(Collectors.groupingBy(
-                        transaction -> transaction.getLeaveType().toString(),
-                        Collectors.summingDouble(LeaveTransaction::getNumberOfDays)
-                ));
-
-        return leaveSummary;
-    }
 }
