@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AssetAssignmentService {
@@ -37,21 +39,12 @@ public class AssetAssignmentService {
         return assetAssignmentRepository.findAll();
     }
 
-    // Lookup assignment by User ID
-    public List<AssetAssignment> getAssignmentsByUserId(String userId) {
-        return assetAssignmentRepository.findByUserId(userId);
-    }
 
-    // Lookup assignment by Asset ID
-    public List<AssetAssignment> getAssignmentsByAssetId(String assetId) {
-        return assetAssignmentRepository.findByAssetId(assetId);
-    }
 
     // Find active assignment for an asset
     public Optional<AssetAssignment> findActiveAssignment(String assetId) {
         return assetAssignmentRepository.findTopByAssetIdAndStatusOrderByIssueDateDesc(assetId, 4);
     }
-
 
     // Get latest active assignments by User ID
     public List<AssetAssignment> getLatestActiveAssignmentsByUserId(String userId) {

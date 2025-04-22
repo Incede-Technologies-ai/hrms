@@ -24,10 +24,10 @@ const EmployeeList = forwardRef(({ onEditEmployee }, ref) => {
     try {
       const response = await axios.get('http://localhost:8080/api/employees');
       console.log(response);
-      
-      const sortedEmployees = response.data.sort((a, b) => a.id -b.id);
+
+      const sortedEmployees = response.data.sort((a, b) => a.employeeId.localeCompare(b.employeeId));
       console.log(sortedEmployees);
-      
+
       setEmployees(sortedEmployees);
     } catch (error) {
       console.error('Error fetching employees:', error);

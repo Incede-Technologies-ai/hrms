@@ -25,8 +25,9 @@ function Dashboard() {
   }, [activeTab]);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    navigate('/');
+    sessionStorage.removeItem('token'); // Remove token from sessionStorage
+    localStorage.removeItem('user'); // Remove user data if stored
+    navigate('/'); // Redirect to login page
   };
 
   const handleEditEmployee = (employee) => {

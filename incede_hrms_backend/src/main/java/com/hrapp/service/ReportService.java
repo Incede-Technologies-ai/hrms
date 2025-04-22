@@ -1,15 +1,22 @@
 package com.hrapp.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hrapp.model.Employee;
 import com.hrapp.model.LeaveTransaction;
+import com.hrapp.model.Asset;
+import com.hrapp.model.AssetAssignment;
 import com.hrapp.repository.EmployeeRepository;
 import com.hrapp.repository.LeaveTransactionRepository;
+import com.hrapp.repository.AssetAssignmentRepository;
+import com.hrapp.repository.AssetRepository;
 
 @Service
 public class ReportService {
@@ -19,6 +26,12 @@ public class ReportService {
 
     @Autowired
     private LeaveTransactionRepository leaveTransactionRepository;
+
+    @Autowired
+    private AssetAssignmentRepository assetAssignmentRepository;
+
+    @Autowired
+    private AssetRepository assetRepository;
 
     public List<EmployeeLeaveReport> getEmployeeLeaveReport(String employeeId) {
         Employee employee = employeeRepository.findByEmployeeId(employeeId);
@@ -44,6 +57,49 @@ public class ReportService {
                         leave.getIsHalfDay()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public List<AssetAssignment> getAssignmentsByAssetId(String assetId) {
+        return assetAssignmentRepository.findByAssetId(assetId);
+    }
+
+    public List<AssetAssignment> getAssignmentsByUserId(String userId) {
+        return assetAssignmentRepository.findByUserId(userId);
+    }
+
+
+    public List<Employee> getHiredEmployees(String startDate, String endDate) {
+        LocalDate start = startDate != null ? LocalDate.parse(startDate) : LocalDate.MIN;
+        LocalDate end = endDate != null ? LocalDate.parse(endDate) : LocalDate.now();
+        return employeeRepository.findEmployeesByJoiningDateBetween(start, end).stream()
+                .filter(Employee::isActive) // Filter active employees
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getAnnualLeaveReport(String employeeId, int year) {
+        Employee employee = employeeRepository.findByEmployeeId(employeeId);
+        if (employee == null) {
+            throw new RuntimeException("Employee not found");
+        }
+
+        // Fetch all leave transactions for the employee in the given year
+        List<LeaveTransaction> leaveTransactions = leaveTransactionRepository.findByEmployeeAndYear(employeeId, year);
+
+        // Summarize the number of days for each leave type
+        Map<String, Double> leaveSummary = leaveTransactions.stream()
+                .collect(Collectors.groupingBy(
+                        transaction -> transaction.getLeaveType().toString(),
+                        Collectors.summingDouble(LeaveTransaction::getNumberOfDays)
+                ));
+
+        // Add the employee's full name to the response
+        Map<String, Object> response = Map.of(
+            "name", employee.getFullName(),
+            "leaveSummary", leaveSummary
+        );
+
+        return response;
     }
 
     public static class EmployeeLeaveReport {
@@ -142,5 +198,5 @@ public class ReportService {
         public void setHalfDay(boolean isHalfDay) {
             this.isHalfDay = isHalfDay;
         }
-}
+    }
 }

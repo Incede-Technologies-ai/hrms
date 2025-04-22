@@ -1,4 +1,3 @@
-# docker-compose.yml
 version: '3.8'
 
 services:
@@ -7,23 +6,23 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - hr-net
+      - hrms-net
     restart: always
-
+    depends_on:
+      - postgres
 
   frontend:
     build: ./incede_hrms_frontend
     ports:
       - "3000:80"
     networks:
-      - hr-net
+      - hrms-net
     depends_on:
       - backend
     restart: always
 
   postgres:
     image: postgres:16
-    container_name: postgres
     environment:
       POSTGRES_DB: hrdb
       POSTGRES_USER: postgres
@@ -31,9 +30,8 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - hr-net
+      - hrms-net
     restart: always
 
-
 networks:
-  hr-net:
+  hrms-net:

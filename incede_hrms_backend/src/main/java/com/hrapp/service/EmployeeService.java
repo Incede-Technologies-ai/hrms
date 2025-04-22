@@ -113,12 +113,4 @@ public class EmployeeService {
                 .filter(employee -> !employee.isActive()) // Filter inactive employees
                 .collect(Collectors.toList());
     }
-
-    public List<Employee> getHiredEmployees(String startDate, String endDate) {
-        LocalDate start = startDate != null ? LocalDate.parse(startDate) : LocalDate.MIN;
-        LocalDate end = endDate != null ? LocalDate.parse(endDate) : LocalDate.now();
-        return employeeRepository.findEmployeesByJoiningDateBetween(start, end).stream()
-                .filter(Employee::isActive) // Filter active employees
-                .collect(Collectors.toList());
-    }
 }

@@ -54,5 +54,5 @@ public class Interns {
 
     private double leaveCount = 0.0; // Number of leaves taken
     private double lopCount = 0.0;   // Loss of Pay Count
-    private int presence = 0;        // Total Present Days
+    private int presence = 0;        //0=active, 1=inactive
 }

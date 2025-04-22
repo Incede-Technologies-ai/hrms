@@ -54,20 +54,6 @@ public class AssetAssignmentController {
         }
     }
 
-    @GetMapping("/lookup/asset/{assetId}")
-    @Operation(summary = "Lookup assignment by asset ID")
-    public ResponseEntity<List<AssetAssignment>> getAssignmentsByAssetId(@PathVariable String assetId) {
-        List<AssetAssignment> assignments = assetAssignmentService.getAssignmentsByAssetId(assetId);
-        return ResponseEntity.ok(assignments);
-    }
-
-    @GetMapping("/lookup/user/{userId}")
-    @Operation(summary = "Lookup assignment by user ID")
-    public ResponseEntity<List<AssetAssignment>> getAssignmentsByUserId(@PathVariable String userId) {
-        List<AssetAssignment> assignments = assetAssignmentService.getAssignmentsByUserId(userId);
-        return ResponseEntity.ok(assignments);
-    }
-
     @PostMapping("/assign")
     @Operation(summary = "Assign asset to user (Employee or Intern)")
     public ResponseEntity<String> assignAsset(@RequestBody Map<String, Object> requestBody) {

@@ -1,6 +1,7 @@
 package com.hrapp.repository;
 
 import com.hrapp.model.AssetAssignment;
+import com.hrapp.model.AssetAssignment.UserType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,6 +28,6 @@ public interface AssetAssignmentRepository extends JpaRepository<AssetAssignment
         AND r.userId = a.userId 
     )
 """)
-List<AssetAssignment> findLatestActiveAssignments(@Param("userId") String userId);
-
+    List<AssetAssignment> findLatestActiveAssignments(@Param("userId") String userId);
+    List<AssetAssignment> findByStatus(int status); // Fetch active assignments where status = 4
 }

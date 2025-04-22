@@ -124,7 +124,7 @@ const Reports = () => {
         }
     
         try {
-            const response = await axios.get(`http://localhost:8080/api/asset-assignments/lookup/asset/${assetId}`);
+            const response = await axios.get(`http://localhost:8080/api/reports/lookup/asset/${assetId}`);
             setAssetReportData(response.data);
         } catch (error) {
             console.error("Error fetching asset report:", error);
@@ -141,7 +141,7 @@ const Reports = () => {
         }
     
         try {
-            const response = await axios.get(`http://localhost:8080/api/asset-assignments/lookup/user/${userAssetId}`);
+            const response = await axios.get(`http://localhost:8080/api/reports/lookup/user/${userAssetId}`);
             setEmployeeAssetReportData(response.data);
         } catch (error) {
             console.error("Error fetching employee asset report:", error);
@@ -162,7 +162,7 @@ const Reports = () => {
     const fetchAssets = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/assets');
+            const response = await axios.get('http://localhost:8080/api/assets/available');
             setAssetData(response.data);
         } catch (error) {
             console.error("Error assets", error);
@@ -173,7 +173,7 @@ const Reports = () => {
     const fetchHiredEmployees = async () => {
         setLoading(true);
         try {
-            const response = await axios.get('http://localhost:8080/api/employees/hired', {
+            const response = await axios.get('http://localhost:8080/api/reports/hired', {
                 params: {
                     startDate: startDate || null,
                     endDate: endDate || null
@@ -196,20 +196,22 @@ const Reports = () => {
         }
     
         try {
-            const response = await axios.get(`http://localhost:8080/api/leave/annual-leave-report`, {
+            const response = await axios.get(`http://localhost:8080/api/reports/annual-leave-report`, {
                 params: { employeeId, year },
             });
     
             const reportData = response.data;
     
-            // Process the data to include Employee ID, Name, and leave types
+            // Ensure the leave counts are accessed correctly from the response
+            const leaveSummary = reportData.leaveSummary || {}; // Fallback to an empty object if leaveSummary is undefined
+    
             const processedData = [
                 {
                     employeeId: employeeId,
-                    name: "John Doe", // Replace with actual employee name if available in the response
-                    annual: reportData.ANNUAL || 0,
-                    sick: reportData.SICK || 0,
-                    lop: reportData.LOP || 0,
+                    name: reportData.name, // Employee name from the response
+                    annual: leaveSummary.ANNUAL || 0, // Access annual leave count
+                    sick: leaveSummary.SICK || 0, // Access sick leave count
+                    lop: leaveSummary.LOP || 0, // Access LOP count
                 },
             ];
     
